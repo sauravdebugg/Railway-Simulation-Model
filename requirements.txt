@@ -1,0 +1,11 @@
+# Production dependencies for the Vercel Python function.
+# Local-only tools (uvicorn and mongomock) remain in backend/requirements.txt.
+fastapi==0.110.1
+motor==3.3.1
+numpy==2.4.6
+pandas==3.0.3
+pyarrow==25.0.0
+pydantic==2.13.4
+pymongo==4.6.3
+python-dotenv==1.2.2
+scikit-learn==1.9.0

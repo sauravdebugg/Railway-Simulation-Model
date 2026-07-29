@@ -1,0 +1,131 @@
+{
+  "theme": "Dark Mode Default - Tactical Command Center",
+  "typography": {
+    "heading_font": "Chivo",
+    "body_font": "IBM Plex Sans",
+    "mono_font": "IBM Plex Mono",
+    "rules": [
+      "Use Chivo for all headers (H1 to H4). Apply tracking-tight or tracking-tighter.",
+      "Never use Inter, Roboto, or Open Sans for headings.",
+      "Use IBM Plex Sans for body text.",
+      "Use IBM Plex Mono for data grids, coordinates, train numbers, and timestamps.",
+      "Labels and overlines must be Uppercase, tiny size, and wide spacing (tracking-[0.2em]).",
+      "Heading maximum size is text-5xl (fluid). Never exceed this."
+    ]
+  },
+  "colors": {
+    "archetype": "Tactical Minimalism (Command Center)",
+    "palette": {
+      "base_bg": "#0A0A0A",
+      "surface_bg": "#141414",
+      "primary_accent": "#007AFF",
+      "warning_accent": "#FFD60A",
+      "critical_accent": "#FF3B30",
+      "success_accent": "#34C759",
+      "text_primary": "#FFFFFF",
+      "text_secondary": "#A1A1AA"
+    },
+    "rules": [
+      "Use Deep Obsidian base for structural background.",
+      "Use Pure White for data clarity (text).",
+      "Avoid vibrating lime colors.",
+      "Never use pure #000000. Tint neutral greys slightly with blue.",
+      "Buttons/CTAs should use Volt Blue or high-saturation blocks."
+    ]
+  },
+  "visual_enhancers": {
+    "surface_strategy": "Grid Borders (Technical Look) & Neumorphism (Crisp Edges)",
+    "rules": [
+      "Use flat solid backgrounds for surfaces instead of glass to prevent visual refraction of data.",
+      "For Dashboard Cards: Flat background, 1px subtle border (border-white/10), no shadow.",
+      "Expose the skeleton: Make the grid visible for data-heavy sections (border-collapse style layout).",
+      "Never use completely transparent backgrounds under headers or dropdowns."
+    ]
+  },
+  "grids_and_layouts": {
+    "bento_grid_protocol": "MODE B: High Density Grid",
+    "rules": [
+      "Base Grid: grid-cols-1 md:grid-cols-3 lg:grid-cols-4 for analytics.",
+      "Gap Strategy: Tight (gap-4 or gap-6).",
+      "Every pixel must be utilized. Use h-full on children.",
+      "Generous spacing inside containers (p-6 or p-8) to prevent text collision with borders.",
+      "Override default stretch behavior on grid with align-items: start where needed."
+    ]
+  },
+  "motion": {
+    "rules": [
+      "Minimalist animations — use micro-interactions for feedback.",
+      "Hover states: Slight lift (-translate-y-1), border color darkens/lightens.",
+      "No universal transitions (transition: all). Target specific properties.",
+      "Respect prefers-reduced-motion."
+    ]
+  },
+  "accessibility": {
+    "rules": [
+      "Normal text: Min 4.5:1 contrast ratio.",
+      "Focus States: Higher contrast than default state (focus:ring-2 focus:ring-blue-500).",
+      "All interactive elements MUST include a data-testid attribute in kebab-case."
+    ]
+  },
+  "media": {
+    "icons_library": "@phosphor-icons/react",
+    "installation_commands": [
+      "yarn add @phosphor-icons/react",
+      "yarn add leaflet react-leaflet",
+      "yarn add chart.js react-chartjs-2",
+      "yarn add @fontsource/chivo @fontsource/ibm-plex-sans @fontsource/ibm-plex-mono"
+    ]
+  },
+  "image_urls": {
+    "hero_backgrounds": [
+      {
+        "url": "https://images.pexels.com/photos/15667272/pexels-photo-15667272.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Moody nighttime train at station. Best for auth pages or landing hero."
+      },
+      {
+        "url": "https://images.pexels.com/photos/4846966/pexels-photo-4846966.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Illuminated railway tracks at night. Best for simulation background or empty states."
+      }
+    ],
+    "content_images": [
+      {
+        "url": "https://images.unsplash.com/photo-1592844002373-a55ecd7af140?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1OTN8MHwxfHNlYXJjaHwxfHxpbmRpYW4lMjBmcmVpZ2h0JTIwdHJhaW4lMjBjYXJnb3xlbnwwfHx8fDE3ODQ4MzQ0NDV8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Yellow and black freight train. Use for fleet management covers or reports."
+      },
+      {
+        "url": "https://images.pexels.com/photos/14903856/pexels-photo-14903856.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Freight train in Ahmedabad. Use for location-specific cards or asset tracking."
+      }
+    ]
+  },
+  "component_guidelines": {
+    "rules": [
+      "Do NOT use HTML-based components for advanced interactions.",
+      "Use Shadcn UI for standard interactions, customize spacing/radii for technical feel.",
+      "Avoid overusing standard cards; prefer borderless dense rows or grid-collapsing table layouts.",
+      "Use sonner for toast notifications."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "You are building a mission-critical digital twin dashboard.",
+    "Do NOT use generic Vercel/Stripe aesthetics. The design must look like a high-end operations control center.",
+    "Ensure the sidebar navigation is dense, icon-heavy (Phosphor), and clearly delineates the 7 pages.",
+    "The Live Map should be a prominent feature, likely taking up maximum screen real estate on its designated page, overlaying data panels.",
+    "Charts (Chart.js) should be styled minimally: remove heavy grid lines, use vibrant tactical colors for lines/bars.",
+    "Do not center-align app containers.",
+    "In tailwind.config.js, ensure colors map to the dark/tactical theme variables.",
+    "NEVER use placeholders like dummyimage or emoji icons."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic outputs. Avoid 'AI slop' aesthetic.",
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "DO NOT apply universal transition (transition: all).",
+    "DO NOT center align the app container (.App { text-align: center; }).",
+    "Every interaction needs micro-animations - hover states, transitions.",
+    "Main agent must use the provided image URLs. Missing categories = placeholder text, which is FORBIDDEN.",
+    "Prioritize using pre-existing components from src/components/ui.",
+    "All interactive and key informational elements MUST include a data-testid attribute to facilitate robust automated testing.",
+    "Use modern pill-shaped or sharp buttons with interaction animations."
+  ]
+}

@@ -1,0 +1,147 @@
+@import "@fontsource/chivo/400.css";
+@import "@fontsource/chivo/500.css";
+@import "@fontsource/chivo/600.css";
+@import "@fontsource/chivo/700.css";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #0a0a0b;
+  --bg-surface: #141416;
+  --bg-elev: #1a1a1d;
+  --border-line: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent-blue: #007aff;
+  --accent-warn: #ffd60a;
+  --accent-crit: #ff3b30;
+  --accent-ok: #34c759;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(1200px 600px at 15% -10%, rgba(0, 122, 255, 0.08), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(255, 214, 10, 0.04), transparent 60%),
+    var(--bg-base);
+}
+
+.font-heading { font-family: "Chivo", ui-sans-serif, sans-serif; letter-spacing: -0.02em; }
+.font-mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+
+/* Tactical grid backdrop */
+.tactical-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.card-flat {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-line);
+  border-radius: 4px;
+}
+
+.card-flat:hover { border-color: var(--border-strong); }
+
+.overline {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.kpi-value {
+  font-family: "Chivo", sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Sidebar link */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  color: var(--text-secondary);
+  border-left: 2px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.nav-link:hover { color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.nav-link.active {
+  color: var(--text-primary);
+  border-left-color: var(--accent-blue);
+  background: rgba(0,122,255,0.06);
+}
+
+/* Leaflet dark tuning */
+.leaflet-container {
+  background: #0a0a0b;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+.leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9); }
+
+.status-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 999px;
+}
+.status-on_time { background: var(--accent-ok); box-shadow: 0 0 8px var(--accent-ok); }
+.status-delayed { background: var(--accent-warn); box-shadow: 0 0 8px var(--accent-warn); }
+.status-critical { background: var(--accent-crit); box-shadow: 0 0 10px var(--accent-crit); }
+
+.scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+
+@layer base {
+  :root {
+    --background: 220 6% 5%;
+    --foreground: 0 0% 100%;
+    --card: 220 6% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 6% 8%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 6% 12%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 6% 12%;
+    --muted-foreground: 220 5% 65%;
+    --accent: 220 6% 12%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 4 100% 59%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 6% 16%;
+    --input: 220 6% 16%;
+    --ring: 211 100% 50%;
+    --radius: 0.25rem;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
+
+/* prevent auto center from CRA App css */
+.App { text-align: left; }

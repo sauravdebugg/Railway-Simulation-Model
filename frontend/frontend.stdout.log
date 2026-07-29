@@ -1,0 +1,23 @@
+yarn run v1.22.22
+$ craco start
+Starting the development server...
+
+Compiled with warnings.
+
+[eslint] 
+src\pages\AIPrediction.jsx
+  Line 40:68:  React Hook React.useEffect has a missing dependency: 'run'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+[1m[33mWARNING[39m[22m in [1m[eslint] 
+src\pages\AIPrediction.jsx
+  Line 40:68:  React Hook React.useEffect has a missing dependency: 'run'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+[39m[22m
+
+webpack compiled with [1m[33m1 warning[39m[22m
+Compiling...
+Compiled successfully!
+webpack compiled [1m[32msuccessfully[39m[22m
