@@ -4,13 +4,17 @@ graph (edges built from `travl_route_part`), rake allocation, and conflict detec
 """
 from __future__ import annotations
 import heapq
+import os
+from pathlib import Path
 from typing import Dict, List
-import pandas as pd
+import joblib
 
-from real_data import _DF, STATION_BY_CODE  # noqa
+from .real_data import _DF, STATION_BY_CODE  # noqa
 
 # --- Build station adjacency graph from via lists ---
 GRAPH: Dict[str, Dict[str, dict]] = {}
+GRAPH_CACHE_VERSION = 1
+DEFAULT_CACHE_DIR = Path(__file__).resolve().parent / "models"
 
 
 def _haversine_km(a_lat, a_lng, b_lat, b_lng):
@@ -22,8 +26,9 @@ def _haversine_km(a_lat, a_lng, b_lat, b_lng):
     return 2 * r * asin(sqrt(aa))
 
 
-def _build_graph():
+def _build_graph() -> None:
     global GRAPH
+    graph = GRAPH
     print("[simulation] building station graph from real via-lists...", flush=True)
     route_lists = _DF["travl_route_part"].dropna().drop_duplicates()
     seen_edges = set()
@@ -42,15 +47,47 @@ def _build_graph():
             if d > 250 or d < 0.5:  # skip huge jumps (bad data)
                 continue
             weight = round(d, 1)
-            current = GRAPH.get(a, {}).get(b)
+            current = graph.get(a, {}).get(b)
             if current is None or weight < current["distance_km"]:
                 seen_edges.add(key)
-                GRAPH.setdefault(a, {})[b] = {"distance_km": weight}
-                GRAPH.setdefault(b, {})[a] = {"distance_km": weight}
+                graph.setdefault(a, {})[b] = {"distance_km": weight}
+                graph.setdefault(b, {})[a] = {"distance_km": weight}
     print(f"[simulation] graph built — {len(GRAPH):,} nodes, {len(seen_edges):,} edges", flush=True)
 
 
-_build_graph()
+def _load_or_build_graph() -> Dict[str, Dict[str, dict]]:
+    global GRAPH
+    cache_dir = Path(os.environ.get("MODEL_CACHE_DIR", DEFAULT_CACHE_DIR))
+    cache_path = cache_dir / "station_graph.joblib"
+    if cache_path.exists():
+        try:
+            payload = joblib.load(cache_path)
+            if payload.get("version") == GRAPH_CACHE_VERSION:
+                GRAPH = payload["graph"]
+                print(
+                    f"[simulation] loaded cached graph — {len(GRAPH):,} nodes",
+                    flush=True,
+                )
+                return GRAPH
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            print(f"[simulation] graph cache unavailable ({exc}); rebuilding", flush=True)
+
+    GRAPH = {}
+    _build_graph()
+    try:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(
+            {"version": GRAPH_CACHE_VERSION, "graph": GRAPH},
+            cache_path,
+            compress=3,
+        )
+        print(f"[simulation] saved graph cache to {cache_path}", flush=True)
+    except OSError as exc:
+        print(f"[simulation] unable to save graph cache: {exc}", flush=True)
+    return GRAPH
+
+
+GRAPH = _load_or_build_graph()
 
 
 def _format_path(origin: str, destination: str, path: list[str],

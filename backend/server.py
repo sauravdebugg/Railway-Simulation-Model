@@ -17,7 +17,7 @@ from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, ConfigDict
 
-from real_data import (
+from .real_data import (
     STATIONS_REAL, STATION_BY_CODE, ZONES_REAL, COMMODITIES_REAL, LOADTYPES_REAL,
     zones_list, build_live_trains, aggregate_kpis, aggregate_zone_stats,
     aggregate_commodity_mix, aggregate_route_analytics, aggregate_asset_utilization,
@@ -27,8 +27,8 @@ from real_data import (
     aggregate_daily_dispatch_trend, aggregate_daily_arrival_trend,
     aggregate_top_loading_stations, aggregate_top_destination_stations,
 )
-from ml_models import FreightModels
-from simulation import shortest_path, allocate_rakes, detect_conflicts, GRAPH
+from .ml_models import FreightModels
+from .simulation import shortest_path, allocate_rakes, detect_conflicts, GRAPH
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -48,9 +48,13 @@ else:
     client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get("DB_NAME", "railway_twin")]
 
-print("[server] training ML models on real OD data...", flush=True)
+print("[server] loading freight ML models...", flush=True)
 ML = FreightModels()
-print(f"[server] ML trained on {ML.trained_rows:,} rows | ETA R²={ML.eta_score} | Circuit R²={ML.circuit_score}",
+print(
+    f"[server] ML source: {'cache' if ML.loaded_from_cache else 'training'}",
+    flush=True,
+)
+print(f"[server] ML ready on {ML.trained_rows:,} rows | ETA R²={ML.eta_score} | Circuit R²={ML.circuit_score}",
       flush=True)
 
 app = FastAPI(title="Indian Railway Digital Twin API", version="1.0.0")
@@ -414,14 +418,15 @@ async def ai_insight(req: InsightRequest):
 
 app.include_router(api)
 
+cors_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.environ.get("CORS_ORIGINS", "*").split(",")
+    if origin.strip()
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=[
-        origin.strip()
-        for origin in os.environ.get("CORS_ORIGINS", "*").split(",")
-        if origin.strip()
-    ],
+    allow_credentials=cors_origins != ["*"],
+    allow_origins=cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

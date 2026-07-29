@@ -521,3 +521,17 @@ INFO:     127.0.0.1:65497 - "GET /api/reports HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64742 - "GET /api/dashboard/kpis HTTP/1.1" 200 OK
 INFO:     127.0.0.1:63260 - "GET /api/settings HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61280 - "GET /api/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51063 - "GET /api/trains?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63588 - "GET /api/congestion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63589 - "GET /api/zones HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63591 - "GET /api/stations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55588 - "GET /api/trains?limit=200 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52954 - "GET /api/congestion HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50604 - "GET /api/zones HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50606 - "GET /api/stations HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50389 - "GET /api/meta/sample-od-pairs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50390 - "GET /api/simulation/conflicts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57971 - "GET /api/meta/sample-od-pairs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52744 - "GET /api/simulation/conflicts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51062 - "POST /api/simulation/plan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54704 - "POST /api/simulation/plan HTTP/1.1" 200 OK

@@ -3,20 +3,37 @@ ML models for freight prediction trained on REAL Indian Railway OD data (FY 2025
 Feature engineering + RandomForest/GradientBoosting via scikit-learn.
 """
 from __future__ import annotations
+import os
+from pathlib import Path
+
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import LinearRegression
 
-from real_data import ml_training_frame
+from .real_data import ml_training_frame
 
 _rng = np.random.default_rng(42)
+MODEL_CACHE_VERSION = 1
+DEFAULT_CACHE_DIR = Path(__file__).resolve().parent / "models"
 
 
 class FreightModels:
     FEATS = ["distance_km", "wagons", "loaded_pct", "priority", "congestion", "weather", "is_dfc"]
 
-    def __init__(self):
+    def __init__(self, force_train: bool = False):
+        cache_dir = Path(os.environ.get("MODEL_CACHE_DIR", DEFAULT_CACHE_DIR))
+        self.cache_path = cache_dir / "freight_models.joblib"
+        if not force_train and self._load_cache():
+            self.loaded_from_cache = True
+            return
+
+        self.loaded_from_cache = False
+        self._train()
+        self._save_cache()
+
+    def _train(self):
         df = ml_training_frame()
         X = df[self.FEATS]
 
@@ -37,6 +54,50 @@ class FreightModels:
         self.eta_score = round(float(self.eta.score(X, df["eta_hrs"])), 3)
         self.circuit_score = round(float(self.circuit.score(X, df["circuit_hrs"])), 3)
         self.trained_rows = int(len(df))
+
+    def _load_cache(self) -> bool:
+        if not self.cache_path.exists():
+            return False
+        try:
+            payload = joblib.load(self.cache_path)
+            if payload.get("version") != MODEL_CACHE_VERSION:
+                return False
+            if payload.get("features") != self.FEATS:
+                return False
+            for name in (
+                "eta", "circuit", "util", "cong", "eta_importance",
+                "circuit_importance", "eta_score", "circuit_score", "trained_rows",
+            ):
+                setattr(self, name, payload[name])
+            print(f"[ml] loaded cached models from {self.cache_path}", flush=True)
+            return True
+        except (OSError, ValueError, KeyError, TypeError) as exc:
+            print(f"[ml] model cache unavailable ({exc}); retraining", flush=True)
+            return False
+
+    def _save_cache(self):
+        try:
+            self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+            joblib.dump(
+                {
+                    "version": MODEL_CACHE_VERSION,
+                    "features": self.FEATS,
+                    "eta": self.eta,
+                    "circuit": self.circuit,
+                    "util": self.util,
+                    "cong": self.cong,
+                    "eta_importance": self.eta_importance,
+                    "circuit_importance": self.circuit_importance,
+                    "eta_score": self.eta_score,
+                    "circuit_score": self.circuit_score,
+                    "trained_rows": self.trained_rows,
+                },
+                self.cache_path,
+                compress=3,
+            )
+            print(f"[ml] saved model cache to {self.cache_path}", flush=True)
+        except OSError as exc:
+            print(f"[ml] unable to save model cache: {exc}", flush=True)
 
     def _row(self, payload: dict) -> pd.DataFrame:
         return pd.DataFrame([{

@@ -1,6 +1,7 @@
 # Production dependencies for the Vercel Python function.
 # Local-only tools (uvicorn and mongomock) remain in backend/requirements.txt.
 fastapi==0.110.1
+joblib==1.5.3
 motor==3.3.1
 numpy==2.4.6
 pandas==3.0.3
